@@ -58,23 +58,16 @@ tasks.withType(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class
     shadow("org.objectweb.asm")
 }
 
-@Suppress("ClassName", "NOTHING_TO_INLINE")
-object settings {
-    val settings0 = Properties()
-
-    init {
-        InputStreamReader(FileInputStream(File(projectDir, "local.properties")), Charsets.UTF_8).use {
-            settings0.load(it)
-        }
+val settings0 = Properties().also { set ->
+    InputStreamReader(FileInputStream(File(projectDir, "local.properties")), Charsets.UTF_8).use {
+        set.load(it)
     }
-
-    inline operator fun get(key: String): String = settings0.getProperty(key)
 }
 
 
 bintray {
-    user = settings["bintray.user"]
-    key = settings["bintray.apikey"]
+    user = settings0.getProperty("bintray.user")
+    key = settings0.getProperty("bintray.apikey")
     with(pkg) {
         name = "Java8Converter"
         repo = "Java8Converter"
@@ -87,4 +80,9 @@ bintray {
             name = project.version.toString()
         }
     }
+}
+tasks.withType(com.jfrog.bintray.gradle.tasks.BintrayUploadTask::class.java) {
+    dependsOn("shadowJar")
+    dependsOn("generateMetadataFileForPluginMavenPublication")
+    dependsOn("generatePomFileForPluginMavenPublication")
 }
