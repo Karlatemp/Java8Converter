@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.util.*
+
 buildscript {
     repositories {
         mavenLocal()
@@ -10,6 +14,8 @@ plugins {
     kotlin("jvm") version "1.3.72"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     `java-gradle-plugin`
+    `maven-publish`
+    id("com.jfrog.bintray") version "1.8.5"
 }
 
 group = "io.github.karlatemp"
@@ -50,4 +56,35 @@ tasks.withType(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class
     shadow("org.intellij.lang.annotations")
     shadow("org.jetbrains.annotations")
     shadow("org.objectweb.asm")
+}
+
+@Suppress("ClassName", "NOTHING_TO_INLINE")
+object settings {
+    val settings0 = Properties()
+
+    init {
+        InputStreamReader(FileInputStream(File(projectDir, "local.properties")), Charsets.UTF_8).use {
+            settings0.load(it)
+        }
+    }
+
+    inline operator fun get(key: String): String = settings0.getProperty(key)
+}
+
+
+bintray {
+    user = settings["bintray.user"]
+    key = settings["bintray.apikey"]
+    with(pkg) {
+        name = "Java8Converter"
+        repo = "Java8Converter"
+        setLicenses("AGPL")
+        val a = "https://github.com/Karlatemp/Java8Converter"
+        vcsUrl = "$a.git"
+        githubRepo = a
+        issueTrackerUrl = "$a/issues"
+        with(version) {
+            name = project.version.toString()
+        }
+    }
 }

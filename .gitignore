@@ -18,3 +18,5 @@ gradle-app.setting
 
 # Project's testing sub-project
 /Jdk13Tester
+
+/local.properties
