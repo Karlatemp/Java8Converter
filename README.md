@@ -25,3 +25,7 @@ tasks.named("java8converter", io.github.karlatemp.java8converter.ConverterTask::
 }
 
 ```
+
+```shell script
+./gradlew java8converter
+```
