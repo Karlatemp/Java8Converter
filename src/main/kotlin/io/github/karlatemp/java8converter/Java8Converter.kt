@@ -15,13 +15,15 @@ import java.io.File
 class Java8Converter : Plugin<Project> {
     override fun apply(target: Project) {
         target.tasks.create("java8converter", ConverterTask::class.java)
-                .converter.scanner {
-                    File(target.buildDir, "libs").listFiles { file ->
-                        file.isFile && file.extension == "jar"
-                    }?.filter {
-                        it.name.startsWith("${target.name}-${target.version}")
-                                && !it.name.endsWith("-converted.jar")
-                    } ?: listOf()
+                .setup {
+                    scanner {
+                        File(target.buildDir, "libs").listFiles { file ->
+                            file.isFile && file.extension == "jar"
+                        }?.filter {
+                            it.name.startsWith("${target.name}-${target.version}")
+                                    && !it.name.endsWith("-converted.jar")
+                        } ?: listOf()
+                    }
                 }
     }
 }

@@ -29,7 +29,7 @@ private typealias EntryFilter = ZipEntry.() -> Boolean
 private typealias FactoryNamer = File.() -> String
 
 open class ConverterTask : DefaultTask() {
-    val converter = Converter()
+    private val converter = Converter()
 
     init {
         group = "converter"
