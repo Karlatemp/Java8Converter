@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "io.github.karlatemp"
-version = "1.0.0-Alpha"
+version = "1.0.1"
 
 repositories {
     mavenLocal()
@@ -52,7 +52,12 @@ tasks.withType(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class
     shadow("org.intellij.lang.annotations")
     shadow("org.jetbrains.annotations")
     shadow("org.objectweb.asm")
+    classifier = ""
 }
+
+tasks.named("jar").get().enabled = false
+tasks.named("publishPlugins").get().dependsOn("shadowJar")
+
 /*
 val settings0 = Properties().also { set ->
     InputStreamReader(FileInputStream(File(projectDir, "local.properties")), Charsets.UTF_8).use {
@@ -113,10 +118,9 @@ gradlePlugin {
     plugins {
         create("Java8Converter") {
             id = "io.github.karlatemp.java8converter"
-            implementationClass = "o.github.karlatemp.java8converter.Java8Converter"
+            implementationClass = "io.github.karlatemp.java8converter.Java8Converter"
         }
     }
-
 }
 pluginBundle {
     // These settings are set for the whole plugin bundle
