@@ -1,3 +1,6 @@
+import java.util.function.Predicate
+import java.util.function.Supplier
+
 buildscript {
     repositories {
         mavenLocal()
@@ -16,7 +19,7 @@ plugins {
 }
 
 group = "io.github.karlatemp"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenLocal()
@@ -89,30 +92,25 @@ tasks.withType(com.jfrog.bintray.gradle.tasks.BintrayUploadTask::class.java) {
 }
 */
 
-// apply(from = project.file("gradle/pom.gradle.kts"))
-
 //tasks.removeIf { it.name == "jar" }
 //tasks.register("jar").configure { dependsOn("ShadowJar") }
+if (System.getProperty("user.name") == "Karlatemp") {
+    apply(from = project.file("G:/KarlatempRepo/pom.gradle.kts"))
 
-/*
-kotlin.run {
-    val awa: (Dependency) -> Boolean = { false }
-    @Suppress("UNCHECKED_CAST")
-    tasks.named("publishToMavenLocal").configure {
-        dependsOn("shadowJar")
-        val envs = (this as java.util.function.Supplier<Any>).get() as MutableMap<String, Any>
-        envs["filter"] = awa
-        envs["callback"] = Consumer<String> {
-            println("C: $it")
-        }
-        envs["output"] = Supplier<File> {
-            File(project.buildDir,
-                    "libs/${project.name}-${project.version}-all.jar"
-            )
+    kotlin.run {
+        @Suppress("UNCHECKED_CAST")
+        tasks.named("publishToMavenLocal").configure {
+            dependsOn("shadowJar")
+            val envs = (this as java.util.function.Supplier<Any>).get() as MutableMap<String, Any>
+            envs["filter"] = Predicate<Dependency> { false }
+            envs["output"] = Supplier<File> {
+                File(project.buildDir,
+                        "libs/${project.name}-${project.version}.jar"
+                )
+            }
         }
     }
 }
-*/
 
 gradlePlugin {
     plugins {

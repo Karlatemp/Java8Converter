@@ -93,7 +93,14 @@ open class Converter {
     }
 
     private fun File.runConverter() {
-        ZipFile(this).use { it.runConverter(output(this)) }
+        ZipFile(this).use { zip ->
+            zip.runConverter(output(this).also {
+                println("Converting $this -> $it")
+                if (path == it.path) {
+                    error("Target source must be different from target location")
+                }
+            })
+        }
     }
 
     private fun ZipFile.runConverter(output: File) {
@@ -102,6 +109,7 @@ open class Converter {
                     runConverter(it, output.namer())
                 }
     }
+
 
     private fun ZipFile.runConverter(output: ZipOutputStream, stringFactoryPackage: String) {
         val nodes = HashMap<String, ClassNode>()
